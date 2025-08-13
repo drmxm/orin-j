@@ -1,0 +1,2 @@
+# Link capture node (index 0) of your Arducam USB to /dev/video-uvc-rgb
+SUBSYSTEM=="video4linux", DRIVERS=="uvcvideo", ATTR{name}=="Arducam_8mp: USB Camera", ATTR{index}=="0", SYMLINK+="video-uvc-rgb"
