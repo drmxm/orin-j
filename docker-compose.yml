@@ -2,18 +2,17 @@ services:
   perception:
     image: mmx-perception:latest
     build:
-      context: .
-      dockerfile: docker/Dockerfile
+      context: ./perception         # <— use service folder as context
+      dockerfile: Dockerfile
     network_mode: host
     ipc: host
-    privileged: true             # simplest for V4L2 access
+    privileged: true
     devices:
-      - /dev/video0:/dev/video0  # change if your Arducam is /dev/video1
+      - /dev/video0:/dev/video0
     volumes:
       - ./config:/work/config:ro
     environment:
       ROS_DOMAIN_ID: 0
-      # USB camera params (override here if needed)
       UVC_DEVICE: /dev/video0
       RGB_WIDTH: "1920"
       RGB_HEIGHT: "1080"
@@ -24,12 +23,13 @@ services:
       RGB_IMAGE_TOPIC: /sensors/rgb/image_raw
       RGB_INFO_TOPIC: /sensors/rgb/camera_info
       RGB_INFO_URL: file:///work/config/rgb_1920x1080.yaml
-    command: ["/start_perception.sh"]
+    command: ["/start.sh"]
 
   infra:
     image: mmx-infra:latest
     build:
-      context: .
+      context: ./infra              # <— use service folder as context
+      dockerfile: Dockerfile
     network_mode: host
     ipc: host
     depends_on:
@@ -37,4 +37,4 @@ services:
     environment:
       ROS_DOMAIN_ID: 0
       FOXGLOVE_PORT: "8765"
-    command: ["/start_infra.sh"]
+    command: ["/start.sh"]
